@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Максим  Березинец](https://up.htmlacademy.ru/ecmascript/12/user/60877).
-* Наставник: `Неизвестно`.
+* Наставник: `Александр Пасунько`.
 
 ---
 
