@@ -29,6 +29,12 @@ const createmainNavigationIndexHtml = () => {
   );
 };
 
+const createButtonShowMore = () => {
+  return (
+    `<button class="films-list__show-more">Show more</button>`
+  );
+};
+
 const renderFilmCard = () => {
   return (
     ` <article class="film-card">
@@ -270,3 +276,7 @@ render(createFilmStatistics, createFooterStatistics(), `afterbegin`);
 const createFooterPopUp = document.querySelector(`.footer`);
 
 render(createFooterPopUp, renderFilmPopUp(), `afterend`);
+
+const createButtonShowMoreDiv = document.querySelector(`.films .films-list`);
+
+render(createButtonShowMoreDiv, createButtonShowMore(), `beforeend`);
