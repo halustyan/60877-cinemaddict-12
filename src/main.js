@@ -1,8 +1,8 @@
 import {createMenuIcon} from './view/menu.js';
 import {createmainNavigationIndexHtml} from './view/navigation.js';
-import {createButtonShowMore} from './view/buttonShowMore.js';
-import {renderFilmCard} from './view/filmCard.js';
-import {renderFilmPopUp} from './view/filmDetails.js';
+import {createButtonShowMore} from './view/button-show-more.js';
+import {renderFilmCard} from './view/film-card.js';
+import {renderFilmPopUp} from './view/film-details.js';
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -161,16 +161,27 @@ const generateRates = () => {
 };
 
 export const generateFilm = () => {
-  return {
-    description: generateDescriptionFilm(),
-    posters: generatePosters(),
-    deskriptionsOfTheText: generateDescriptions(),
-    comments: {
+
+  const generateСomment = () => {
+    let commentsInFilm = [];
+    let elem = [{
       emotions: generateEmotions(),
       date: generateDates(),
       author: generateAuthors(),
       message: generateCommentMessages(),
-    },
+    }
+  ]
+  const randomIndex = getRandomInteger(1, 10);
+    for (let i=0; i<randomIndex; i++) {
+      commentsInFilm.push(elem);
+    }
+  };
+  generateСomment();
+  return {
+    description: generateDescriptionFilm(),
+    posters: generatePosters(),
+    deskriptionsOfTheText: generateDescriptions(),
+    comments: commentsInFilm,
     rate: generateRates(),
     yearOfTheProduction: generateYears(),
     howFilmlasts: generateFilmLasts(),
