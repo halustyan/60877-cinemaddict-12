@@ -7,22 +7,6 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const generateDescriptionFilm = () => {
-  const descriptions = [
-    `The Great Flamarion`,
-    `Пятый элемент`,
-    `Джон Уик`,
-    `Лысый нянь`,
-    `Беверли хилс`,
-    `Сваты`,
-    `Близнецы`,
-  ];
-
-  const randomIndex = getRandomInteger(0, descriptions.length - 1);
-
-  return descriptions[randomIndex];
-};
-
 const emotions = [`angry.png`, `puke.png`, `sleeping.png`, `smile.png`];
 const descriptionsOfTheText = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget`,
@@ -53,7 +37,7 @@ const generatePoster = () => {
 };
 
 const generateYears = () => {
-  const years = ['1980', '1990', '2000', '2010', '2020'];
+  const years = [`1980`, `1990`, `2000`, `2010`, `2020`];
 
   const randomIndex = getRandomInteger(0, years.length - 1);
 
@@ -61,19 +45,11 @@ const generateYears = () => {
 };
 
 const generateFilmLasts = () => {
-  const filmlasts = ['1h 45m', '2h 55m', '1h 30m', '2h 00m', '0h 40m'];
+  const filmlasts = [`1h 45m`, `2h 55m`, `1h 30m`, `2h 00m`, `0h 40m`];
 
   const randomIndex = getRandomInteger(0, filmlasts.length - 1);
 
   return filmlasts[randomIndex];
-};
-
-const generateGenres = () => {
-  const filmlasts = ['action', 'sci-fi', 'horror', 'love', 'pop'];
-
-  const randomIndex = getRandomInteger(0, generateGenres.length - 1);
-
-  return generateGenres[randomIndex];
 };
 
 const generateDates = () => {
@@ -84,7 +60,7 @@ const generateDates = () => {
 };
 
 const generateAuthors = () => {
-  const authors = ['Grisha', 'Max', 'Alex', 'Yulya', 'Olha'];
+  const authors = [`Grisha`, `Max`, `Alex`, `Yulya`, `Olha`];
 
   const randomIndex = getRandomInteger(0, authors.length - 1);
 
@@ -97,7 +73,7 @@ const generateText = () => {
 
 const generateEmotion = () => {
   return `./images/emoji/${emotions[getRandomInteger(0, emotions.length - 1)]}`;
-}; // получаем индекс эмоции
+};
 
 const generateComment = () => {
   return {
@@ -106,15 +82,6 @@ const generateComment = () => {
     author: generateAuthors(),
     date: generateDates(),
   };
-};
-
-const generateCommentMessages = () => {
-  const result = [];
-  const count = getRandomInteger(0, 100);
-  for (let i = 0; i < count; ++i) {
-    result.push(generateComment());
-  }
-  return result;
 };
 
 let trueOrFalse = () => {
@@ -126,23 +93,6 @@ let trueOrFalse = () => {
     ch1 = ``;
   }
   return ch1;
-};
-
-const generateСomments = () => {
-  let commentsInFilm = [];
-  let elem = [{
-    emotions: generateEmotion(),
-    date: generateDates(),
-    author: generateAuthors(),
-    message: generateCommentMessages(),
-  }
-];
-
-const randomIndex = getRandomInteger(1, 10);
-  for (let i=0; i<randomIndex; i++) {
-    commentsInFilm.push(elem);
-  }
-  return commentsInFilm;
 };
 
 const writers = [
@@ -271,18 +221,7 @@ const generateRating = () => {
   return rating[getRandomInteger(0, rating.length - 1)];
 };
 
-const rating = [
-  `9.8`,
-  `5.6`,
-  `3.5`,
-  `7.9`,
-  `8.7`,
-  `4.0`,
-  `5.6`,
-  `7.2`,
-  `6.8`,
-  `4.8`,
-];
+const rating = [`9`, `5`, `3`, `7`, `8`, `4`, `5`, `7`, `6`, `4`];
 
 const directors = [
   `Тимур Бекмамбетов`,
@@ -320,12 +259,10 @@ export const generateFilm = () => {
     rating: generateRating(),
     yearOfTheProduction: generateYears(),
     howFilmlasts: generateFilmLasts(),
-    genres: generateGenres(),
     watchlist: trueOrFalse(),
     favorites: trueOrFalse(),
     director: generateDirector(),
     watched: trueOrFalse(),
-    director: generateDirector(),
     writers: generateWriters(),
     actors: generateActors(),
     country: generateCountry(),
@@ -336,5 +273,5 @@ export const generateFilm = () => {
     release: generateYear(),
     duration: generateDuration(),
     genre: generateGenre(),
-  }
+  };
 };

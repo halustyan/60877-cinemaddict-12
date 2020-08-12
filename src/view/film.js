@@ -1,6 +1,6 @@
 export const createFilmTemplate = (film) => {
-    return (
-      `<article class="film-card">
+  return (
+    `<article class="film-card">
             <h3 class="film-card__title">${film.title}</h3>
             <p class="film-card__rating">${film.rating}</p>
             <p class="film-card__info">
@@ -17,5 +17,5 @@ export const createFilmTemplate = (film) => {
               <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
             </form>
           </article>`
-    );
-  };
+  );
+};

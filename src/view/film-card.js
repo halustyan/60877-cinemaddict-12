@@ -1,6 +1,6 @@
 const renderFilmCard = () => {
-    return (
-      ` <article class="film-card">
+  return (
+    ` <article class="film-card">
           <h3 class="film-card__title">Sagebrush Trail</h3>
           <p class="film-card__rating">3.2</p>
           <p class="film-card__info">
@@ -18,7 +18,9 @@ const renderFilmCard = () => {
           </form>
         </article>
        `
-    );
-  };
+  );
+};
 
-  export { renderFilmCard };
+export {
+  renderFilmCard
+};
