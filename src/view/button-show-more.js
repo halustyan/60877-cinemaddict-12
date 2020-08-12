@@ -1,7 +1,7 @@
-const createButtonShowMore = () => {
+const createShowMoreButtonTemplate = () => {
     return (
       `<button class="films-list__show-more">Show more</button>`
     );
   };
 
-  export { createButtonShowMore };
+  export { createShowMoreButtonTemplate };

@@ -23,26 +23,33 @@ const generateDescriptionFilm = () => {
   return descriptions[randomIndex];
 };
 
+const emotions = [`angry.png`, `puke.png`, `sleeping.png`, `smile.png`];
+const descriptionsOfTheText = [
+  `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget`,
+  `Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.`,
+  `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
+  `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.
+  Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.`
+];
 const generateDescriptions = () => {
-  const descriptionsOfTheText = [
-    `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget`,
-    `Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.`,
-    `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-    `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.
-    Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.`
-  ];
 
   const randomIndex = getRandomInteger(0, descriptionsOfTheText.length - 1);
 
   return descriptionsOfTheText[randomIndex];
 };
 
-const generatePosters = () => {
-  const posters = ['made-for-each-other.png', 'popeye-meets-sinbad.png', 'sagebrush-trail.png', 'santa-claus-conquers-the-martians.png', 'the-dance-of-life.png', 'the-great-flamarion.png', 'the-man-with-the-golden-arm.png'];
+const posters = [
+  `made-for-each-other.png`,
+  `popeye-meets-sinbad.png`,
+  `sagebrush-trail.jpg`,
+  `santa-claus-conquers-the-martians.jpg`,
+  `the-dance-of-life.jpg`,
+  `the-great-flamarion.jpg`,
+  `the-man-with-the-golden-arm.jpg`,
+];
 
-  const randomIndex = getRandomInteger(0, posters.length - 1);
-
-  return posters[randomIndex];
+const generatePoster = () => {
+  return `./images/posters/${posters[getRandomInteger(0, posters.length - 1)]}`;
 };
 
 const generateYears = () => {
@@ -69,20 +76,11 @@ const generateGenres = () => {
   return generateGenres[randomIndex];
 };
 
-const generateEmotions = () => {
-  const emotions = ["smile", "sleeping", "puke", "angry"];
-
-  const randomIndex = getRandomInteger(0, emotions.length - 1);
-
-  return emotions[randomIndex];
-};
-
 const generateDates = () => {
-  const differentDates = ['2019/12/31 23:59', '2029/12/31 23:59', '2039/12/31 23:59', '2049/12/31 23:59', '2059/12/31 23:59'];
-
-  const randomIndex = getRandomInteger(0, differentDates.length - 1);
-
-  return differentDates[randomIndex];
+  const yearComments = getRandomInteger(1960, 2020);
+  const month = getRandomInteger(0, 11);
+  const day = getRandomInteger(0, 30);
+  return new Date(yearComments, month, day).toString();
 };
 
 const generateAuthors = () => {
@@ -93,22 +91,32 @@ const generateAuthors = () => {
   return authors[randomIndex];
 };
 
+const generateText = () => {
+  return descriptionsOfTheText[getRandomInteger(0, descriptionsOfTheText.length - 1)];
+};
+
+const generateEmotion = () => {
+  return `./images/emoji/${emotions[getRandomInteger(0, emotions.length - 1)]}`;
+}; // получаем индекс эмоции
+
+const generateComment = () => {
+  return {
+    text: generateText(),
+    emotion: generateEmotion(),
+    author: generateAuthors(),
+    date: generateDates(),
+  };
+};
+
 const generateCommentMessages = () => {
-  const messageComment = ["I love this film", "I did not like this film", "I am the first", "I am the second", "Russia has Baikal"];
-
-  const randomIndex = getRandomInteger(0, messageComment.length - 1);
-
-  return messageComment[randomIndex];
+  const result = [];
+  const count = getRandomInteger(0, 100);
+  for (let i = 0; i < count; ++i) {
+    result.push(generateComment());
+  }
+  return result;
 };
 
-
-const generateRates = () => {
-  const rate = [1,2,3,4,5];
-
-  const randomIndex = getRandomInteger(0, rate.length - 1);
-
-  return rate[randomIndex];
-};
 let trueOrFalse = () => {
   let ch = !!getRandomInteger(0, 1);
   let ch1 = ``;
@@ -123,7 +131,7 @@ let trueOrFalse = () => {
 const generateСomments = () => {
   let commentsInFilm = [];
   let elem = [{
-    emotions: generateEmotions(),
+    emotions: generateEmotion(),
     date: generateDates(),
     author: generateAuthors(),
     message: generateCommentMessages(),
@@ -135,22 +143,6 @@ const randomIndex = getRandomInteger(1, 10);
     commentsInFilm.push(elem);
   }
   return commentsInFilm;
-};
-const directors = [
-  `Тимур Бекмамбетов`,
-  `Леван Габриадзе`,
-  `Фёдор Бондарчук`,
-  `Николай Лебедев`,
-  `Дмитрий Дьяченко`,
-  `Жора Крыжовников`,
-  `Марюс Вайсберг`,
-  `Сарик Андреасян`,
-  `Андрей Кравчук`,
-  `Кирилл Кузин`,
-];
-
-const generateDirector = () => {
-  return directors[getRandomInteger(0, directors.length - 1)];
 };
 
 const writers = [
@@ -169,6 +161,23 @@ const writers = [
 const generateWriters = () => {
   return writers[getRandomInteger(0, writers.length - 1)];
 };
+
+const generateYear = () => {
+  return year[getRandomInteger(0, year.length - 1)];
+};
+
+const year = [
+  `1960`,
+  `1970`,
+  `1980`,
+  `1990`,
+  `2000`,
+  `2010`,
+  `2020`,
+  `2012`,
+  `2015`,
+  `2017`,
+];
 
 const actors = [
   `Данила Козловский`,
@@ -200,26 +209,132 @@ const generateCountry = () => {
   return countrys[getRandomInteger(0, countrys.length - 1)];
 };
 
-
 export const generateFilms = () => {
+  const films = [];
+  for (let i = 0; i < 40; ++i) {
+    films.push(generateFilm());
+  }
+  return films;
+};
+
+const generateDescription = () => {
+  const numberSentence = getRandomInteger(1, 5); // получаем количество  предложений
+  const result = [];
+  for (let i = 0; i < numberSentence; ++i) {
+    result.push(descriptionsOfTheText[getRandomInteger(0, descriptionsOfTheText.length - 1)]); // добавляем в result по одному
+  }
+  return result.join(` `);
+}; // получаем описание
+
+const titles = [
+  `Бриллиантовая рука`,
+  `Кавказская пленница`,
+  `12 стульев`,
+  `Мебиус`,
+  `Карнавальная ночь`,
+  `любовь и голуби`,
+  `Стажер`,
+  `Лысый нянь`,
+  `Беверли хилс`,
+  `Сваты`,
+  `Близнецы`,
+];
+
+const generateTitle = () => {
+  return titles[getRandomInteger(0, titles.length - 1)];
+};
+
+const generateDuration = () => {
+  return duration[getRandomInteger(0, duration.length - 1)];
+};
+
+const duration = [
+  `60 минут`,
+  `90 минут`,
+  `120 минут`,
+  `75 минут`,
+  `110 минут`,
+  `85 минут`,
+  `65 минут`,
+  `105 минут`,
+  `95 минут`,
+  `70 минут`,
+];
+
+const generateGenre = () => {
+  return genre[getRandomInteger(0, genre.length - 1)];
+};
+
+const genre = [`драма`, `комедия`, `боевик`, `мелодрама`, `триллер`];
+
+const generateRating = () => {
+  return rating[getRandomInteger(0, rating.length - 1)];
+};
+
+const rating = [
+  `9.8`,
+  `5.6`,
+  `3.5`,
+  `7.9`,
+  `8.7`,
+  `4.0`,
+  `5.6`,
+  `7.2`,
+  `6.8`,
+  `4.8`,
+];
+
+const directors = [
+  `Тимур Бекмамбетов`,
+  `Леван Габриадзе`,
+  `Фёдор Бондарчук`,
+  `Николай Лебедев`,
+  `Дмитрий Дьяченко`,
+  `Жора Крыжовников`,
+  `Марюс Вайсберг`,
+  `Сарик Андреасян`,
+  `Андрей Кравчук`,
+  `Кирилл Кузин`,
+];
+
+const generateDirector = () => {
+  return directors[getRandomInteger(0, directors.length - 1)];
+};
+
+const generateComments = () => {
+  const result = [];
+  const count = getRandomInteger(0, 100);
+  for (let i = 0; i < count; ++i) {
+    result.push(generateComment());
+  }
+  return result;
+};
+
+export const generateFilm = () => {
   return {
-    description: generateDescriptionFilm(),
-    posters: generatePosters(),
+    description: generateDescription(),
+    poster: generatePoster(),
     deskriptionsOfTheText: generateDescriptions(),
-    comments: generateСomments(),
-    rate: generateRates(),
+    title: generateTitle(),
+    comments: generateComments(),
+    rating: generateRating(),
     yearOfTheProduction: generateYears(),
     howFilmlasts: generateFilmLasts(),
     genres: generateGenres(),
     watchlist: trueOrFalse(),
     favorites: trueOrFalse(),
+    director: generateDirector(),
     watched: trueOrFalse(),
     director: generateDirector(),
     writers: generateWriters(),
     actors: generateActors(),
     country: generateCountry(),
-    emotion: generateEmotions(),
+    emotion: generateEmotion(),
     author: generateAuthors(),
+    year: generateYear(),
     date: generateDates(),
+    release: generateYear(),
+    duration: generateDuration(),
+    genre: generateGenre(),
   }
 };
