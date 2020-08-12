@@ -5,9 +5,6 @@ import {renderFilmCard} from './view/film-card.js';
 import {renderFilmPopUp} from './view/film-details.js';
 import {generateFilms} from "./mock/film.js";
 
-
-//Новое
-
 const films = generateFilms(); // отрисовываем карточки
 let navigationChecked = {
   watchlist: 0,
@@ -15,23 +12,16 @@ let navigationChecked = {
   history: 0,
 };
 
-films.forEach((film) => {
-  if ((film.watchlist === `checked`)) {
+for (let key in films) {
+  if ((key.watchlist === `checked`)) {
     navigationChecked.watchlist++;
   }
-  if ((film.favorites === `checked`)) {
+  if ((key.favorites === `checked`)) {
     navigationChecked.favorites++;
   }
-  if ((film.watched === `checked`)) {
+  if ((key.watched === `checked`)) {
     navigationChecked.history++;
   }
-});
-
-render(siteMainElement, createNavigationTemplate(navigationChecked), `beforeend`);
-
-for (let i = 0; i < 5; ++i) {
-  const filmTemplate = createFilmTemplate(films[i]);
-  render(FilmListElement, filmTemplate, `beforeend`);
 }
 
 const generateFiveElement = (lineCount) => {
@@ -45,17 +35,8 @@ const generateFiveElement = (lineCount) => {
   }
   return lineCount;
 };
-render(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
 
 let renderCount = 5;
-
-const buttonShow = document.querySelector(`.films-list__show-more`);
-
-buttonShow.addEventListener(`click`, function (evt) {
-  evt.preventDefault();
-  renderCount = generateFiveElement(renderCount);
-});
-//Заканчиваем новое
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);

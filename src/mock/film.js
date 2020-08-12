@@ -217,10 +217,9 @@ export const generateFilms = () => {
     director: generateDirector(),
     writers: generateWriters(),
     actors: generateActors(),
-    release: generateYear(),
     country: generateCountry(),
-    emotion: generateEmotion(),
-    author: generateAuthor(),
-    date: generateDate(),
+    emotion: generateEmotions(),
+    author: generateAuthors(),
+    date: generateDates(),
   }
 };
