@@ -1,7 +1,8 @@
 // Попап (расширенная информация о фильме)
-import {createPopupComments} from "./comments.js";
+import {createElement} from "./utils.js";
+import PopUpComments from "./comments.js";
 
-export const createFilmPopupTemplate = (film) => {
+ const createFilmPopupTemplate = (film) => {
   return (
     `<section class="film-details">
         <form class="film-details__inner" action="" method="get">
@@ -107,3 +108,25 @@ export const createFilmPopupTemplate = (film) => {
     </section>`
   );
 };
+
+export default class FilmPopupTemplate {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmPopupTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

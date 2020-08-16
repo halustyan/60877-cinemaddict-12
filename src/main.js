@@ -1,23 +1,29 @@
-import {createProfileTemplate} from './view/avatar.js';
-import {createNavigationTemplate} from "./view/search.js";
-import {createSortTemplate} from "./view/sort-films.js";
-import {createFilmsTemplate} from "./view/films.js";
-import {createFilmTemplate} from "./view/film.js";
+import SiteProfile from "./view/avatar.js";
+import NavigationTemplate from "./view/search.js";
+import SortTemplate from "./view/sort-films.js";
+import FilmsTemplate from "./view/films.js";
+import FilmTemplate from "./view/film.js";
 import {generateFilms} from "./mock/film.js";
-import {createShowMoreButtonTemplate} from './view/button-show-more.js';
-import {createTopRatedTemplate} from './view/top-rate.js';
-import {createMostCommentedTemplate} from "./view/most-comment.js";
-import {createFilmPopupTemplate} from "./view/film-popup.js";
+import ButtonShowMore from './view/button-show-more.js';
+import TopRatedTemplate from './view/top-rate.js';
+import MostCommentedTemplate from "./view/most-comment.js";
+import FilmPopupTemplate from './view/button-show-more.js';
+import {renderElement, RenderPosition} from "./utils.js";
+
+const SiteProfileComponent = new SiteProfile();
+const SortTemplateComponent = new SortTemplate();
+const FilmsTemplateComponent = new FilmsTemplate();
+const ButtonShowMoreComponent = new ButtonShowMore();
+const TopRatedTemplateComponent = new TopRatedTemplate();
+const MostCommentedTemplateComponent = new MostCommentedTemplate();
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const footerElement = document.querySelector(`.footer`);
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 const films = generateFilms();
+
+
 
 let navigationChecked = {
   watchlist: 0,
@@ -37,22 +43,27 @@ films.forEach((film) => {
   }
 });
 
-render(siteHeaderElement, createProfileTemplate(), `beforeend`);
-render(siteHeaderElement, createNavigationTemplate(navigationChecked), `afterend`);
-render(siteMainElement, createSortTemplate(), `beforeend`);
-render(siteMainElement, createFilmsTemplate(), `beforeend`);
+
+renderElement(siteHeaderElement, SiteProfileComponent.getElement(), RenderPosition.BEFOREEND);
+
+renderElement(siteHeaderElement, new NavigationTemplate(navigationChecked).getElement(), RenderPosition.AFTEREND);
+
+renderElement(siteMainElement, SortTemplateComponent.getElement(), RenderPosition.BEFOREEND);
+
+renderElement(siteMainElement, FilmsTemplateComponent.getElement(), RenderPosition.BEFOREEND);
 
 const FilmListElement = siteMainElement.querySelector(`.films-list .films-list__container`);
 
 for (let i = 0; i < 5; ++i) {
-  const filmTemplate = createFilmTemplate(films[i]);
-  render(FilmListElement, filmTemplate, `beforeend`);
+  //const filmTemplate = createFilmTemplate(films[i]);
+  const filmTemplate =  new FilmTemplate(films[i]);
+  renderElement(FilmListElement, filmTemplate, `beforeend`);
 }
 
 const generateFiveElement = (lineCount) => {
   for (let i = lineCount; i < lineCount + 5; ++i) {
     const filmTemplate = createFilmTemplate(films[i]);
-    render(FilmListElement, filmTemplate, `beforeend`);
+    renderElement(FilmListElement, filmTemplate, `beforeend`);
   }
   lineCount += 5;
   if (lineCount >= films.length) {
@@ -61,10 +72,13 @@ const generateFiveElement = (lineCount) => {
   return lineCount;
 };
 
-render(siteMainElement, createShowMoreButtonTemplate(), `beforeend`);
-render(siteMainElement, createTopRatedTemplate(), `beforeend`);
-render(siteMainElement, createMostCommentedTemplate(), `beforeend`);
-render(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
+renderElement(siteMainElement, ButtonShowMoreComponent.getElement(), RenderPosition.BEFOREEND);
+
+renderElement(siteMainElement, TopRatedTemplateComponent.getElement(),  RenderPosition.BEFOREEND);
+
+renderElement(siteMainElement, MostCommentedTemplateComponent.getElement(), RenderPosition.BEFOREEND);
+
+renderElement(footerElement, new FilmPopupTemplate(films[0]).getElement(), RenderPosition.AFTEREND);
 
 let renderCount = 5;
 

@@ -1,4 +1,5 @@
-export const createPopupComments = (film) => {
+import {createElement} from "./utils.js";
+const createPopupComments = (film) => {
 
   let textComments = ``;
 
@@ -19,3 +20,25 @@ export const createPopupComments = (film) => {
   });
   return textComments;
 };
+
+export default class PopUpComments {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPopupComments();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
