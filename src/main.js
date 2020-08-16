@@ -43,7 +43,6 @@ films.forEach((film) => {
   }
 });
 
-
 renderElement(siteHeaderElement, SiteProfileComponent.getElement(), RenderPosition.BEFOREEND);
 
 renderElement(siteHeaderElement, new NavigationTemplate(navigationChecked).getElement(), RenderPosition.AFTEREND);
