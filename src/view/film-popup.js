@@ -1,5 +1,5 @@
 // Попап (расширенная информация о фильме)
-import {createElement} from "./utils.js";
+import {createElement, render, RenderPosition} from "../utils.js";
 import PopUpComments from "./comments.js";
 
  const createFilmPopupTemplate = (film) => {
@@ -74,10 +74,8 @@ import PopUpComments from "./comments.js";
           <div class="form-details__bottom-container">
             <section class="film-details__comments-wrap">
               <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
-              <ul class="film-details__comments-list">`
-              + createPopupComments(film) +
-
-              `</ul>
+              <ul class="film-details__comments-list">
+              </ul>
               <div class="film-details__new-comment">
                 <div for="add-emoji" class="film-details__add-emoji-label"></div>
                 <label class="film-details__comment-label">
@@ -110,12 +108,13 @@ import PopUpComments from "./comments.js";
 };
 
 export default class FilmPopupTemplate {
-  constructor() {
+  constructor(film) {
+    this._film = film;
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmPopupTemplate();
+    return createFilmPopupTemplate(this._film);
   }
 
   getElement() {

@@ -1,20 +1,18 @@
 import {createElement} from "../utils.js";
- const createTopRatedTemplate = () => {
-  return (
-    `<section class="films-list--extra">
-      <h2 class="films-list__title">Top rated</h2>
-      <div class="films-list__container"></div>
-    </section>`
-  );
+
+const createNoFIlmTemplate = () => {
+  return `<p class="films-list__title">
+  There are no movies in our database
+  </p>`;
 };
 
-export default class TopRatedTemplate {
+export default class NoFilmView {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createTopRatedTemplate();
+    return createNoFIlmTemplate();
   }
 
   getElement() {
