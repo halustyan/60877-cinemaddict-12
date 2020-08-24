@@ -6,7 +6,7 @@ import FilmTemplate from "./view/film.js";
 import { generateFilms } from "./mock/film.js";
 import ButtonShowMore from './view/button-show-more.js';
 import FilmPopupTemplate from './view/film-popup.js';
-import { render, RenderPosition } from "./utils.js";
+import {render, RenderPosition, replace, remove} from "./utils/render.js";
 import PopUpComments from "./view/comments.js";
 import NoFilmView from "./view/no-film.js";
 
@@ -36,13 +36,13 @@ films.forEach((film) => {
   }
 });
 
-render(siteHeaderElement, SiteProfileComponent.getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, SiteProfileComponent, RenderPosition.BEFOREEND);
 
-render(siteMainElement, new NavigationTemplate(navigationChecked).getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new NavigationTemplate(navigationChecked), RenderPosition.BEFOREEND);
 
-render(siteMainElement, SortTemplateComponent.getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, SortTemplateComponent, RenderPosition.BEFOREEND);
 
-render(siteMainElement, FilmsTemplateComponent.getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, FilmsTemplateComponent, RenderPosition.BEFOREEND);
 
 const fileListElement = siteMainElement.querySelector(`.films-list`);
 const filmListContainerElement = fileListElement.querySelector(`.films-list__container`);
@@ -51,30 +51,35 @@ const filmListContainerElement = fileListElement.querySelector(`.films-list__con
 const renderFilm = (filmListElement, film) => {
   const filmComponent = new FilmTemplate(film);
   const filmPopupComponent = new FilmPopupTemplate(film);
-  render(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
+  render(filmListElement, filmComponent, RenderPosition.BEFOREEND);
 
   const openPopup = () => {
-    render(footerElement, filmPopupComponent.getElement(), RenderPosition.BEFOREEND);
+    render(footerElement, filmPopupComponent, RenderPosition.BEFOREEND);
 
     const CommentsContainer = filmPopupComponent.getElement().querySelector(".film-details__comments-list");
 
     film.comments.forEach(element => {
       const comments = new PopUpComments(element);
-      render(CommentsContainer, comments.getElement(), RenderPosition.BEFOREEND);
-
+      render(CommentsContainer, comments, RenderPosition.BEFOREEND);
     });
     document.addEventListener ('keydown', onEscKeyDown);
-    filmPopupComponent.getElement().querySelector('.film-details__close-btn').addEventListener('click', ()=>{
-      removePopup();
-    })
-  };
 
+    filmPopupComponent.setEditClickHandler(() => {
+      removePopup();
+    });
+  }
   function removePopup() {
     filmPopupComponent.getElement().remove();
   }
+
+  filmComponent.setEditClickHandler(() => {
+    openPopup();
+  });
+  /*
   filmComponent.getElement().addEventListener(`click`, () => {
     openPopup();
   });
+  */
   const onEscKeyDown = (evt) => {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
@@ -86,7 +91,7 @@ const renderFilm = (filmListElement, film) => {
 
 const renderFilmList = ()=> {
   if (films.length===0) {
-    render(filmListContainerElement, new NoFilmView().getElement(), RenderPosition.BEFOREEND);
+    render(filmListContainerElement, new NoFilmView(), RenderPosition.BEFOREEND);
     return;
   }
 
@@ -105,18 +110,23 @@ const renderFilmList = ()=> {
     return lineCount;
   };
 
-  render(fileListElement, ButtonShowMoreComponent.getElement(), RenderPosition.BEFOREEND);
-
-  //render(siteMainElement, new TopRatedTemplate().getElement(), RenderPosition.BEFOREEND);
-
-  //render(siteMainElement, MostCommentedTemplateComponent.getElement(), RenderPosition.BEFOREEND);
+  render(fileListElement, ButtonShowMoreComponent, RenderPosition.BEFOREEND);
 
   let renderCount = 5;
 
   const buttonShow = document.querySelector(`.films-list__show-more`);
-  buttonShow.addEventListener(`click`, function (evt) {
-    evt.preventDefault();
+
+  buttonShow.setEditClickHandler(() => {
+     evt.preventDefault();
     renderCount = generateFiveElement(renderCount);
   });
-}
+
+  /*buttonShow.addEventListener(`click`, function (evt) {
+    evt.preventDefault();
+    renderCount = generateFiveElement(renderCount);
+  });*/
+};
 renderFilmList();
+
+
+
