@@ -1,6 +1,6 @@
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
-import  {getRandomInteger} from "./utils/common.js"
+import  {getRandomInteger} from "../utils/common.js"
 
 const emotions = [`angry.png`, `puke.png`, `sleeping.png`, `smile.png`];
 const descriptionsOfTheText = [

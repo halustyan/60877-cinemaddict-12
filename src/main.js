@@ -2,18 +2,19 @@ import SiteProfile from "./view/avatar.js";
 import NavigationTemplate from "./view/search.js";
 import SortTemplate from "./view/sort-films.js";
 import FilmsTemplate from "./view/films.js";
-import FilmTemplate from "./view/film.js";
+/*import FilmTemplate from "./view/film.js";*/
 import { generateFilms } from "./mock/film.js";
 import ButtonShowMore from './view/button-show-more.js';
-import FilmPopupTemplate from './view/film-popup.js';
-import {render, RenderPosition, replace, remove} from "./utils/render.js";
-import PopUpComments from "./view/comments.js";
-import NoFilmView from "./view/no-film.js";
+/*import FilmPopupTemplate from './view/film-popup.js';*/
+import {render, RenderPosition, replace} from "./utils/render.js";
+/*import PopUpComments from "./view/comments.js";
+import NoFilmView from "./view/no-film.js";*/
+import MovieList from "../src/presenter/film-presenter.js";
 
 const SiteProfileComponent = new SiteProfile();
-const SortTemplateComponent = new SortTemplate();
+/*const SortTemplateComponent = new SortTemplate();
 const FilmsTemplateComponent = new FilmsTemplate();
-const ButtonShowMoreComponent = new ButtonShowMore();
+const ButtonShowMoreComponent = new ButtonShowMore();*/
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const footerElement = document.querySelector(`.footer`);
@@ -40,7 +41,7 @@ render(siteHeaderElement, SiteProfileComponent, RenderPosition.BEFOREEND);
 
 render(siteMainElement, new NavigationTemplate(navigationChecked), RenderPosition.BEFOREEND);
 
-render(siteMainElement, SortTemplateComponent, RenderPosition.BEFOREEND);
+/*render(siteMainElement, SortTemplateComponent, RenderPosition.BEFOREEND);
 
 render(siteMainElement, FilmsTemplateComponent, RenderPosition.BEFOREEND);
 
@@ -75,11 +76,11 @@ const renderFilm = (filmListElement, film) => {
   filmComponent.setEditClickHandler(() => {
     openPopup();
   });
-  /*
+
   filmComponent.getElement().addEventListener(`click`, () => {
     openPopup();
   });
-  */
+
   const onEscKeyDown = (evt) => {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
@@ -87,8 +88,8 @@ const renderFilm = (filmListElement, film) => {
       document.removeEventListener(`keydown`, onEscKeyDown);
     }
   };
-};
-
+};*/
+/*
 const renderFilmList = ()=> {
   if (films.length===0) {
     render(filmListContainerElement, new NoFilmView(), RenderPosition.BEFOREEND);
@@ -120,13 +121,7 @@ const renderFilmList = ()=> {
      evt.preventDefault();
     renderCount = generateFiveElement(renderCount);
   });
-
-  /*buttonShow.addEventListener(`click`, function (evt) {
-    evt.preventDefault();
-    renderCount = generateFiveElement(renderCount);
-  });*/
 };
-renderFilmList();
-
-
-
+renderFilmList();*/
+const filmPresenter = new MovieList(siteMainElement);
+filmPresenter.init(films);
