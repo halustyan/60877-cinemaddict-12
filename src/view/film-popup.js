@@ -1,8 +1,6 @@
-// Попап (расширенная информация о фильме)
 import AbstractView from "./abstract.js";
-import PopUpComments from "./comments.js";
 
- const createFilmPopupTemplate = (film) => {
+const createFilmPopupTemplate = (film) => {
   return (
     `<section class="film-details">
         <form class="film-details__inner" action="" method="get">
@@ -107,26 +105,18 @@ import PopUpComments from "./comments.js";
   );
 };
 
-export default class FilmPopupTemplate extends AbstractView{
-    constructor(film) {
-      super();
-
-      // 4. Теперь обработчик - метод класса, а не стрелочная функция.
-      // Поэтому при передаче в addEventListener он теряет контекст (this),
-      // а с контекстом - доступ к свойствам и методам.
-      // Чтобы такого не происходило, нужно насильно
-      // привязать обработчик к контексту с помощью bind
-      this._film = film;
-      this._clickHandler = this._clickHandler.bind(this);
-      this._editClickHandler = this._editClickHandler.bind(this);
-    }
+export default class FilmPopupTemplate extends AbstractView {
+  constructor(film) {
+    super();
+    this._film = film;
+    this._clickHandler = this._clickHandler.bind(this);
+    this._editClickHandler = this._editClickHandler.bind(this);
+    this._callback = {};
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+  }
 
   getTemplate() {
     return createFilmPopupTemplate(this._film);
-  }
-  _clickHandler(evt) {
-    evt.preventDefault();
-    this._callback.click();
   }
 
   _editClickHandler(evt) {
@@ -138,4 +128,40 @@ export default class FilmPopupTemplate extends AbstractView{
     this._callback.editClick = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._editClickHandler);
   }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+    // 3. А внутри абстрактного обработчика вызовем колбэк
+    this._callback.click(evt);
+  }
+
+  setClickHandler(callback) {
+    // Мы могли бы сразу передать callback в addEventListener,
+    // но тогда бы для удаления обработчика в будущем,
+    // нам нужно было бы производить это снаружи, где-то там,
+    // где мы вызывали setClickHandler, что не всегда удобно
+
+    // 1. Поэтому колбэк мы запишем во внутреннее свойство
+    this._callback.click = callback;
+    // 2. В addEventListener передадим абстрактный обработчик
+    this.getElement().addEventListener(`click`, this._clickHandler);
+  }
+
+  _escKeyDownHandler(evt) {
+    // 3. А внутри абстрактного обработчика вызовем колбэк
+    this._callback.keydown(evt);
+  }
+
+  setEscKeyDownHandler(callback) {
+    // Мы могли бы сразу передать callback в addEventListener,
+    // но тогда бы для удаления обработчика в будущем,
+    // нам нужно было бы производить это снаружи, где-то там,
+    // где мы вызывали setClickHandler, что не всегда удобно
+
+    // 1. Поэтому колбэк мы запишем во внутреннее свойство
+    this._callback.keydown = callback;
+    // 2. В addEventListener передадим абстрактный обработчик
+    document.addEventListener(`keydown`, this._escKeyDownHandler);
+  }
+
 }

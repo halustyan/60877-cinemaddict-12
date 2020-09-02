@@ -1,6 +1,4 @@
-// Функция из интернета по генерации случайного числа из диапазона
-// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
-import  {getRandomInteger} from "../utils/common.js"
+import {getRandomInteger} from "../utils/common.js";
 
 const emotions = [`angry.png`, `puke.png`, `sleeping.png`, `smile.png`];
 const descriptionsOfTheText = [
@@ -154,7 +152,7 @@ const generateCountry = () => {
   return countrys[getRandomInteger(0, countrys.length - 1)];
 };
 
- export const generateFilms = () => {
+export const generateFilms = () => {
   const films = [];
   for (let i = 0; i < 40; ++i) {
     films.push(generateFilm());
@@ -163,13 +161,13 @@ const generateCountry = () => {
 };
 
 const generateDescription = () => {
-  const numberSentence = getRandomInteger(1, 5); // получаем количество  предложений
+  const numberSentence = getRandomInteger(1, 5);
   const result = [];
   for (let i = 0; i < numberSentence; ++i) {
-    result.push(descriptionsOfTheText[getRandomInteger(0, descriptionsOfTheText.length - 1)]); // добавляем в result по одному
+    result.push(descriptionsOfTheText[getRandomInteger(0, descriptionsOfTheText.length - 1)]);
   }
   return result.join(` `);
-}; // получаем описание
+};
 
 const titles = [
   `Бриллиантовая рука`,

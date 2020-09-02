@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 const createPopupComments = (comment) => {
-    return `<li class="film-details__comment">
+  return `<li class="film-details__comment">
                   <span class="film-details__comment-emoji">
                     <img src=${comment.emotion} width="55" height="55" alt="emoji">
                   </span>
@@ -15,7 +15,7 @@ const createPopupComments = (comment) => {
                 </li>`;
 };
 
-export default class PopUpComments extends AbstractView{
+export default class PopUpComments extends AbstractView {
   constructor(comment) {
     super();
     this._comment = comment;

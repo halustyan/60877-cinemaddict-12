@@ -13,7 +13,7 @@ const createNavigationTemplate = (navigationChecked) => {
   );
 };
 
-export default class NavigationTemplate extends AbstractView{
+export default class NavigationTemplate extends AbstractView {
   constructor(navigationChecked) {
     super();
     this._navigation = navigationChecked;
@@ -22,6 +22,4 @@ export default class NavigationTemplate extends AbstractView{
   getTemplate() {
     return createNavigationTemplate(this._navigation);
   }
-
-
 }

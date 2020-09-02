@@ -6,7 +6,7 @@ const createNoFIlmTemplate = () => {
   </p>`;
 };
 
-export default class NoFilmView extends AbstractView{
+export default class NoFilmView extends AbstractView {
   getTemplate() {
     return createNoFIlmTemplate();
   }
