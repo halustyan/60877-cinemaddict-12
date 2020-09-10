@@ -20,7 +20,6 @@ export default class MovieList {
     this._ButtonShowMoreComponent = new ButtonShowMore();
     this._FilmsTemplateComponent = new FilmsTemplate();
     this._NoFilmViewComponent = new NoFilmView();
-    /*this.__renderedFilmCountStep = FILM_COUNT_STEP;*/
     this._filmContainer = filmContainer;
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
