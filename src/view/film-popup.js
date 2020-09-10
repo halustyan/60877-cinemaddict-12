@@ -1,4 +1,29 @@
-import AbstractView from "./abstract.js";
+import AbstractView from "./smart.js";
+import Smart from "./smart.js";
+
+const createPopupComments = (film) => {
+
+  let textComments = ``;
+
+  film.comments.forEach((comments) => {
+    textComments += `<li class="film-details__comment">
+                  <span class="film-details__comment-emoji">
+                    <img src=${comments.emotion} width="55" height="55" alt="emoji">
+                  </span>
+                  <div>
+                    <p class="film-details__comment-text">${comments.text}</p>
+                    <p class="film-details__comment-info">
+                      <span class="film-details__comment-author">${comments.author}</span>
+                      <span class="film-details__comment-day">${comments.date}</span>
+                      <button class="film-details__comment-delete">Delete</button>
+                    </p>
+                  </div>
+                </li>`;
+  });
+  return textComments;
+
+
+};
 
 const createFilmPopupTemplate = (film) => {
   return (
@@ -61,11 +86,11 @@ const createFilmPopupTemplate = (film) => {
               </div>
             </div>
             <section class="film-details__controls">
-              <input type="checkbox" class="film-details__control-input visually-hidden" ${film.watchlist} id="watchlist" name="watchlist">
+              <input type="checkbox" class="film-details__control-input visually-hidden" ${film.watchlist ? `checked` : ``}  id="watchlist" name="watchlist">
               <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-              <input type="checkbox" class="film-details__control-input visually-hidden" ${film.watched} id="watched" name="watched">
+              <input type="checkbox" class="film-details__control-input visually-hidden" ${film.watched ? `checked` : ``} id="watched" name="watched">
               <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-              <input type="checkbox" class="film-details__control-input visually-hidden" ${film.favorites} id="favorite" name="favorite">
+              <input type="checkbox" class="film-details__control-input visually-hidden" ${film.favorites ? `checked` : ``} id="favorite" name="favorite">
               <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
             </section>
           </div>
@@ -73,9 +98,15 @@ const createFilmPopupTemplate = (film) => {
             <section class="film-details__comments-wrap">
               <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
               <ul class="film-details__comments-list">
+              `
+    + createPopupComments(film) +
+
+    `
               </ul>
               <div class="film-details__new-comment">
-                <div for="add-emoji" class="film-details__add-emoji-label"></div>
+              <div for="add-emoji" class="film-details__add-emoji-label" id="emoji">${film.emotion
+                ? `<img src="images/emoji/${film.emotion}" width="55" height="55" alt="emoji-smile">`
+                : ``}</div>
                 <label class="film-details__comment-label">
                   <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
                 </label>
@@ -105,14 +136,24 @@ const createFilmPopupTemplate = (film) => {
   );
 };
 
-export default class FilmPopupTemplate extends AbstractView {
+export default class FilmPopupTemplate extends Smart {
   constructor(film) {
     super();
     this._film = film;
+    this._escCallback = {};
     this._clickHandler = this._clickHandler.bind(this);
     this._editClickHandler = this._editClickHandler.bind(this);
     this._callback = {};
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
+    this._watchlistClickHandler = this._watchedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
+    this._setInnerHandlers();
+  }
+
+  _watchedClickHandler(evt) {
+    this._callback.watchedClick(evt);
   }
 
   getTemplate() {
@@ -122,6 +163,16 @@ export default class FilmPopupTemplate extends AbstractView {
   _editClickHandler(evt) {
     evt.preventDefault();
     this._callback.editClick();
+  }
+
+  _watchlistClickHandler(evt) {
+    this._callback.watchlistClick(evt);
+  }
+
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, this._watchlistClickHandler);
+
   }
 
   setEditClickHandler(callback) {
@@ -152,6 +203,11 @@ export default class FilmPopupTemplate extends AbstractView {
     this._callback.keydown(evt);
   }
 
+  _setInnerHandlers() {
+    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiChangeHandler);
+
+  }
+
   setEscKeyDownHandler(callback) {
     // Мы могли бы сразу передать callback в addEventListener,
     // но тогда бы для удаления обработчика в будущем,
@@ -162,6 +218,40 @@ export default class FilmPopupTemplate extends AbstractView {
     this._callback.keydown = callback;
     // 2. В addEventListener передадим абстрактный обработчик
     document.addEventListener(`keydown`, this._escKeyDownHandler);
+  }
+
+  _emojiChangeHandler(evt) {
+    // console.log(evt.target.value);
+    evt.preventDefault();
+    this.updateData({
+      emotion: evt.target.value,
+    });
+  }
+
+  _watchedClickHandler(evt) {
+    this._callback.watchedClick(evt);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedClickHandler);
+  }
+
+  _favoriteClickHandler(evt) {
+    this._callback.favoriteClick(evt);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setClickHandler(this._callback.click);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setWatchlistClickHandler(this._callback.watchlistClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
 }

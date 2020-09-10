@@ -1,4 +1,5 @@
 import {getRandomInteger} from "../utils/common.js";
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const emotions = [`angry.png`, `puke.png`, `sleeping.png`, `smile.png`];
 const descriptionsOfTheText = [
@@ -244,6 +245,8 @@ const generateComments = () => {
 
 export const generateFilm = () => {
   return {
+    id: generateId(),
+
     description: generateDescription(),
     poster: generatePoster(),
     deskriptionsOfTheText: generateDescriptions(),
