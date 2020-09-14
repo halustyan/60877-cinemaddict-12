@@ -1,4 +1,3 @@
-import AbstractView from "./smart.js";
 import Smart from "./smart.js";
 
 const createPopupComments = (film) => {
@@ -104,9 +103,7 @@ const createFilmPopupTemplate = (film) => {
     `
               </ul>
               <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label" id="emoji">${film.emotion
-                ? `<img src="images/emoji/${film.emotion}" width="55" height="55" alt="emoji-smile">`
-                : ``}</div>
+              <div for="add-emoji" class="film-details__add-emoji-label" id="emoji">${film.emotion ? `<img src="images/emoji/${film.emotion}" width="55" height="55" alt="emoji-smile">` : ``}</div>
                 <label class="film-details__comment-label">
                   <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
                 </label>

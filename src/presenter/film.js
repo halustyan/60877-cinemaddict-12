@@ -1,5 +1,5 @@
 import FilmTemplate from "../view/film.js";
-import { render, RenderPosition, replace, footerElement, remove} from "../utils/render.js";
+import {render, RenderPosition, footerElement, remove} from "../utils/render.js";
 import FilmsTemplate from "../view/films.js";
 import FilmPopupTemplate from "../view/film-popup.js";
 
@@ -56,70 +56,64 @@ export default class FIlmPresenter {
     }
   }
 
-    _escKeyDownHandler() {
+  _escKeyDownHandler() {
 
-    }
-    _clickWatchlist() {
-      this._changeData(
-          Object.assign(
-              {},
-              this._film,
-              {
-                watchlist: !this._film.watchlist
-              }
-          )
-      );
-    }
+  }
+  _clickWatchlist() {
+    this._changeData(
+        Object.assign({},
+            this._film, {
+              watchlist: !this._film.watchlist
+            }
+        )
+    );
+  }
 
-    _clickWatched() {
-      this._changeData(
-          Object.assign(
-              {},
-              this._film,
-              {
-                watched: !this._film.watched
-              }
-          )
-      );
-    }
+  _clickWatched() {
+    this._changeData(
+        Object.assign({},
+            this._film, {
+              watched: !this._film.watched
+            }
+        )
+    );
+  }
 
-    _clickFavorite() {
-      this._changeData(
-          Object.assign(
-              {},
-              this._film,
-              {
-                favorites: !this._film.favorites
-              }
-          )
-      );
-    }
+  _clickFavorite() {
+    this._changeData(
+        Object.assign({},
+            this._film, {
+              favorites: !this._film.favorites
+            }
+        )
+    );
+  }
 
-    closeItemPopup() {
+  closeItemPopup() {
+    this._closePopup();
+  }
+
+  _openPopup(evt) {
+    if (evt.target.classList.contains(`film-card__controls-item`)) {
+      return;
+    }
+    this._mode = Mode.POPUP;
+    this._handlePopupChange();
+    this._filmPopupComponent.setClickHandler(this._handlerCloseClick);
+    this._filmPopupComponent.restoreHandlers();
+    render(footerElement, this._filmPopupComponent, RenderPosition.BEFOREEND);
+  }
+
+  _handlerCloseClick() {
+    this._closePopup();
+  }
+
+  _handlerCloseKeyDown(evt) {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
       this._closePopup();
     }
-
-    _openPopup(evt) {
-      if (evt.target.classList.contains(`film-card__controls-item`)) {
-        return;
-      }
-      this._mode = Mode.POPUP;
-      this._handlePopupChange();
-      this._filmPopupComponent.setClickHandler(this._handlerCloseClick);
-      this._filmPopupComponent.restoreHandlers();
-      render(footerElement, this._filmPopupComponent, RenderPosition.BEFOREEND);
-    }
-
-    _handlerCloseClick() {
-      this._closePopup();
-    }
-
-    _handlerCloseKeyDown(evt) {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        this._closePopup();
-      }
-    }
+  }
 
   _filmComponentSetClickHandler() {
     this._filmComponent.setClickHandler(() => {
@@ -130,15 +124,15 @@ export default class FIlmPresenter {
         if (target.classList.contains(`film-details__close-btn`)) {
           this._filmPopupComponent.getElement().remove();
         }
-      })
-    })
+      });
+    });
   }
 
   _filmPopUpComponentSetEscKeyDownHandler() {
     this._filmPopupComponent.setEscKeyDownHandler((evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         evt.preventDefault();
-        filmPopupComponent.getElement().remove();
+        this._filmPopupComponent.getElement().remove();
       }
     });
   }
@@ -150,8 +144,7 @@ export default class FIlmPresenter {
   }
 
   _renderFilmFunc() {
-
-    render(filmListElement, filmComponent, RenderPosition.BEFOREEND);
+    render(this._FilmsTemplateComponent, this._filmComponent, RenderPosition.BEFOREEND);
   }
 
   destroy() {

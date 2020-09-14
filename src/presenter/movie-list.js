@@ -1,7 +1,7 @@
 import ButtonShowMore from "../view/button-show-more.js";
 import SortTemplate from "../view/sort-films.js";
 import FilmsTemplate from "../view/films.js";
-import {render, RenderPosition, remove, footerElement} from "../utils/render.js";
+import {render, RenderPosition, remove} from "../utils/render.js";
 import NoFilmView from "../view/no-film.js";
 import {SortType} from "../const.js";
 import FilmPresenter from "./film.js";
@@ -38,6 +38,10 @@ export default class MovieList {
     this._renderButtonShowMore();
     this._filmsnew = films.slice();
     this._sourcedFilms = films.slice();
+  }
+
+  _handleModeChange () {
+
   }
 
   _sortFilms(sortType) {
@@ -78,7 +82,7 @@ export default class MovieList {
 
   _renderFilm(film) {
 
-    const filmPresenter = new FilmPresenter(this._FilmsTemplateComponent.getElement().querySelector(".films-list__container"), this._handleFilmChange, this._handleModeChange);
+    const filmPresenter = new FilmPresenter(this._FilmsTemplateComponent.getElement().querySelector(`.films-list__container`), this._handleFilmChange, this._handleModeChange);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
@@ -89,12 +93,8 @@ export default class MovieList {
     this._filmPresenter[updatedFilm.id].init(updatedFilm);
   }
 
-  _handleModeChange(){
-
-  }
-
   _renderNoMovies() {
-    renderElement(this._containerFilms, this._noMovies, RenderPosition.AFTERBEGIN);
+    render(this._containerFilms, this._noMovies, RenderPosition.AFTERBEGIN);
   }
 
   _handlePopupChange() {
@@ -137,7 +137,7 @@ export default class MovieList {
   }
 
   _renderLoadMoreButton() {
-    renderElement(this._containerFilms, this._ShowMoreButton.getElement(), RenderPosition.BEFOREEND);
+    render(this._containerFilms, this._ShowMoreButton.getElement(), RenderPosition.BEFOREEND);
     this._ShowMoreButton.setClickHandler(this._handleLoadMoreButtonClick.bind(this));
   }
 
@@ -153,7 +153,4 @@ export default class MovieList {
   destroy() {
     remove(this._filmComponent);
   }
-
 }
-
-
