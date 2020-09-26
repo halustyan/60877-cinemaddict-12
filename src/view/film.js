@@ -1,4 +1,5 @@
 import AbstractView from "./abstract.js";
+import {timeMinutesToHour} from "../utils/common.js";
 
 const createFilmTemplate = (film) => {
   return (
@@ -14,9 +15,9 @@ const createFilmTemplate = (film) => {
             <p class="film-card__description">${film.description}</p>
             <a class="film-card__comments">${film.comments.length} comments</a>
             <form class="film-card__controls">
-              <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist film-card__controls-item--active">Add to watchlist</button>
-              <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-              <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+              <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${film.watchlist ? `film-card__controls-item--active` : ``} ">Add to watchlist</button>
+              <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${film.watched ? `film-card__controls-item--active` : ``}">Mark as watched</button>
+              <button class="film-card__controls-item button film-card__controls-item--favorite ${film.favorites ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
             </form>
           </article>`
   );
@@ -90,7 +91,7 @@ export default class FilmTemplate extends AbstractView {
   }
 
   _clickHandler(evt) {
-    evt.preventDefault();
+
     // 3. А внутри абстрактного обработчика вызовем колбэк
     this._callback.click(evt);
   }

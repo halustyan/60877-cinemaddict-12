@@ -1,4 +1,5 @@
 import AbstractView from "./abstract.js";
+
 const createShowMoreButtonTemplate = () => {
   return (
     `<button class="films-list__show-more">Show more</button>`
@@ -6,10 +7,10 @@ const createShowMoreButtonTemplate = () => {
 };
 
 export default class ButtonShowMore extends AbstractView {
-  constructor() {
+  constructor(film) {
     super();
+    this._film = film;
     this._clickHandler = this._clickHandler.bind(this);
-    this._editClickHandler = this._editClickHandler.bind(this);
     this._callback = {};
   }
 
@@ -18,17 +19,12 @@ export default class ButtonShowMore extends AbstractView {
   }
 
   _clickHandler(evt) {
-    evt.preventDefault();
-    this._callback.click();
+    this._callback.click(evt);
   }
 
-  _editClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.editClick();
-  }
+  setClickHandler(callback) {
+    this._callback.click = callback;
 
-  setEditClickHandler(callback) {
-    this._callback.editClick = callback;
-    this.getElement().addEventListener(`click`, this._editClickHandler);
+    this.getElement().addEventListener(`click`, this._clickHandler);
   }
 }

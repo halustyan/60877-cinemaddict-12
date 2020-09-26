@@ -1,4 +1,7 @@
 import Smart from "./smart.js";
+import {timeMinutesToHour, yearFormat, yearFormatComments} from "../utils/common.js";
+import he from 'he';
+import moment from 'moment';
 
 const createPopupComments = (film) => {
 
@@ -13,15 +16,13 @@ const createPopupComments = (film) => {
                     <p class="film-details__comment-text">${comments.text}</p>
                     <p class="film-details__comment-info">
                       <span class="film-details__comment-author">${comments.author}</span>
-                      <span class="film-details__comment-day">${comments.date}</span>
+                      <span class="film-details__comment-day">${yearFormatComments(comments.date)}</span>
                       <button class="film-details__comment-delete">Delete</button>
                     </p>
                   </div>
                 </li>`;
   });
   return textComments;
-
-
 };
 
 const createFilmPopupTemplate = (film) => {
@@ -62,11 +63,11 @@ const createFilmPopupTemplate = (film) => {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Год</td>
-                    <td class="film-details__cell">${film.release}</td>
+                    <td class="film-details__cell">${moment(film.date).format(`DD MMMM YYYY`)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Продолжительность</td>
-                    <td class="film-details__cell">${film.duration}</td>
+                    <td class="film-details__cell">${timeMinutesToHour(film.duration)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Страна</td>
@@ -103,7 +104,7 @@ const createFilmPopupTemplate = (film) => {
     `
               </ul>
               <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label" id="emoji">${film.emotion ? `<img src="images/emoji/${film.emotion}" width="55" height="55" alt="emoji-smile">` : ``}</div>
+              <div for="add-emoji" class="film-details__add-emoji-label" id="emoji">${film.emotion ? `<img src="${film.emotion}" width="55" height="55" alt="emoji-smile">` : ``}</div>
                 <label class="film-details__comment-label">
                   <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
                 </label>
@@ -136,25 +137,97 @@ const createFilmPopupTemplate = (film) => {
 export default class FilmPopupTemplate extends Smart {
   constructor(film) {
     super();
-    this._film = film;
+    this._data = film;
     this._escCallback = {};
     this._clickHandler = this._clickHandler.bind(this);
-    this._editClickHandler = this._editClickHandler.bind(this);
     this._callback = {};
+    this._clickHandlerDelete = this._clickHandlerDelete.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
-    this._watchlistClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
+    this._pressHandlerAdd = this._pressHandlerAdd.bind(this);
     this._setInnerHandlers();
   }
 
-  _watchedClickHandler(evt) {
-    this._callback.watchedClick(evt);
+  _clickWatchlist() {
+    // console.log(this._film);
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
+        Object.assign(
+            {},
+            this._film,
+            {
+              watchlist: !this._film.watchlist
+            }
+        )
+    );
+  }
+
+  _clickHandlerWatchlist(evt) {
+    evt.preventDefault();
+    this._callback.clickWatchlist(evt);
+  }
+  setClickHandlerWatchlist(callback) {
+    this._callback.clickWatchlist = callback;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._clickHandlerWatchlist);
+  }
+  _clickHandlerWatched(evt) {
+    evt.preventDefault();
+    this._callback.clicWatched(evt);
+  }
+  setClickHandlerWatched(callback) {
+    this._callback.clicWatched = callback;
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._clickHandlerWatched);
+  }
+  _clickHandlerFavorite(evt) {
+    evt.preventDefault();
+    this._callback.clickFavorite(evt);
+  }
+
+  setClickHandlerFavorite(callback) {
+    this._callback.clickFavorite = callback;
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._clickHandlerFavorite);
+  }
+
+  _clickWatched() {
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
+        Object.assign(
+            {},
+            this._film,
+            {
+              watched: !this._film.watched
+            }
+        )
+    );
+  }
+
+  _clickFavorite() {
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
+        Object.assign(
+            {},
+            this._film,
+            {
+              favorites: !this._film.favorites
+            }
+        )
+    );
+  }
+
+  _watchedClickHandler() {
+    this.updateData({
+      watched: !this._data.watched
+    });
   }
 
   getTemplate() {
-    return createFilmPopupTemplate(this._film);
+    return createFilmPopupTemplate(this._data);
   }
 
   _editClickHandler(evt) {
@@ -163,7 +236,9 @@ export default class FilmPopupTemplate extends Smart {
   }
 
   _watchlistClickHandler(evt) {
-    this._callback.watchlistClick(evt);
+    this.updateData({
+      watchlist: !this._data.watchlist
+    });
   }
 
   setWatchlistClickHandler(callback) {
@@ -178,18 +253,11 @@ export default class FilmPopupTemplate extends Smart {
   }
 
   _clickHandler(evt) {
-    evt.preventDefault();
-    // 3. А внутри абстрактного обработчика вызовем колбэк
     this._callback.click(evt);
   }
 
   setClickHandler(callback) {
-    // Мы могли бы сразу передать callback в addEventListener,
-    // но тогда бы для удаления обработчика в будущем,
-    // нам нужно было бы производить это снаружи, где-то там,
-    // где мы вызывали setClickHandler, что не всегда удобно
 
-    // 1. Поэтому колбэк мы запишем во внутреннее свойство
     this._callback.click = callback;
     // 2. В addEventListener передадим абстрактный обработчик
     this.getElement().addEventListener(`click`, this._clickHandler);
@@ -202,16 +270,17 @@ export default class FilmPopupTemplate extends Smart {
 
   _setInnerHandlers() {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiChangeHandler);
+    this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, this._clickHandlerDelete);
+    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, this._watchlistClickHandler);
+    this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedClickHandler);
+    this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteClickHandler);
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._pressHandlerAdd);
+
+    // this.setCloseHandler(this._callback.click);
 
   }
 
   setEscKeyDownHandler(callback) {
-    // Мы могли бы сразу передать callback в addEventListener,
-    // но тогда бы для удаления обработчика в будущем,
-    // нам нужно было бы производить это снаружи, где-то там,
-    // где мы вызывали setClickHandler, что не всегда удобно
-
-    // 1. Поэтому колбэк мы запишем во внутреннее свойство
     this._callback.keydown = callback;
     // 2. В addEventListener передадим абстрактный обработчик
     document.addEventListener(`keydown`, this._escKeyDownHandler);
@@ -226,7 +295,9 @@ export default class FilmPopupTemplate extends Smart {
   }
 
   _watchedClickHandler(evt) {
-    this._callback.watchedClick(evt);
+    this.updateData({
+      watched: !this._data.watched
+    });
   }
 
   setWatchedClickHandler(callback) {
@@ -234,8 +305,57 @@ export default class FilmPopupTemplate extends Smart {
     this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedClickHandler);
   }
 
-  _favoriteClickHandler(evt) {
-    this._callback.favoriteClick(evt);
+  _favoriteClickHandler() {
+    this.updateData({
+      favorites: !this._data.favorites
+    });
+  }
+
+  _clickHandlerDelete(evt) {
+    if (!evt.target.classList.contains(`film-details__comment-delete`)) {
+      return;
+    }
+    evt.preventDefault();
+    const commentIndex = this._data.comments.findIndex((item) => item.id === parseInt(evt.target.dataset.id, 10));
+    const comments = [
+      ...this._data.comments.slice(0, commentIndex),
+      ...this._data.comments.slice(commentIndex + 1),
+    ];
+    this.updateData({
+      comments
+    });
+
+  }
+
+  _pressHandlerAdd(evt) {
+    if (evt.ctrlKey && parseInt(evt.keyCode, 10) === 13) {
+      evt.preventDefault();
+      const idComment = this._data.comments[this._data.comments.length - 1].id + 1;
+      const newComment = {
+        id: idComment,
+        text: he.encode(evt.target.value),
+        emotion: `/images/emoji/${this._data.emotion}.png`,
+        author: `User`,
+        date: moment().format(`YYYY/MM/DD hh:mm`),
+
+      };
+      const comments = [
+        ...this._data.comments.slice(), newComment,
+
+      ];
+      this.updateData({
+        comments,
+        emotion: null,
+      });
+    }
+
+  }
+
+
+
+  setCloseHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
   }
 
   setFavoriteClickHandler(callback) {
@@ -245,10 +365,7 @@ export default class FilmPopupTemplate extends Smart {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this.setClickHandler(this._callback.click);
-    this.setWatchedClickHandler(this._callback.watchedClick);
-    this.setWatchlistClickHandler(this._callback.watchlistClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setCloseHandler(this._callback.click);
   }
 
 }
