@@ -144,26 +144,15 @@ export default class FilmPopupTemplate extends Smart {
     this._clickHandlerDelete = this._clickHandlerDelete.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
     this._pressHandlerAdd = this._pressHandlerAdd.bind(this);
-    this._setInnerHandlers();
-  }
 
-  _clickWatchlist() {
-    // console.log(this._film);
-    this._changeData(
-        UserAction.UPDATE_FILM,
-        UpdateType.MINOR,
-        Object.assign(
-            {},
-            this._film,
-            {
-              watchlist: !this._film.watchlist
-            }
-        )
-    );
+    this._clickHandlerWatchlist = this._clickHandlerWatchlist.bind(this);
+    this._clickHandlerWatched = this._clickHandlerWatched.bind(this);
+    this._clickHandlerFavorite = this._clickHandlerFavorite.bind(this);
+
+    this._setInnerHandlers();
   }
 
   _clickHandlerWatchlist(evt) {
@@ -192,34 +181,6 @@ export default class FilmPopupTemplate extends Smart {
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._clickHandlerFavorite);
   }
 
-  _clickWatched() {
-    this._changeData(
-        UserAction.UPDATE_FILM,
-        UpdateType.MINOR,
-        Object.assign(
-            {},
-            this._film,
-            {
-              watched: !this._film.watched
-            }
-        )
-    );
-  }
-
-  _clickFavorite() {
-    this._changeData(
-        UserAction.UPDATE_FILM,
-        UpdateType.MINOR,
-        Object.assign(
-            {},
-            this._film,
-            {
-              favorites: !this._film.favorites
-            }
-        )
-    );
-  }
-
   _watchedClickHandler() {
     this.updateData({
       watched: !this._data.watched
@@ -230,37 +191,8 @@ export default class FilmPopupTemplate extends Smart {
     return createFilmPopupTemplate(this._data);
   }
 
-  _editClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.editClick();
-  }
-
-  _watchlistClickHandler(evt) {
-    this.updateData({
-      watchlist: !this._data.watchlist
-    });
-  }
-
-  setWatchlistClickHandler(callback) {
-    this._callback.watchlistClick = callback;
-    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, this._watchlistClickHandler);
-
-  }
-
-  setEditClickHandler(callback) {
-    this._callback.editClick = callback;
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._editClickHandler);
-  }
-
   _clickHandler(evt) {
     this._callback.click(evt);
-  }
-
-  setClickHandler(callback) {
-
-    this._callback.click = callback;
-    // 2. В addEventListener передадим абстрактный обработчик
-    this.getElement().addEventListener(`click`, this._clickHandler);
   }
 
   _escKeyDownHandler(evt) {
@@ -271,12 +203,7 @@ export default class FilmPopupTemplate extends Smart {
   _setInnerHandlers() {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiChangeHandler);
     this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, this._clickHandlerDelete);
-    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, this._watchlistClickHandler);
-    this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedClickHandler);
-    this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteClickHandler);
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._pressHandlerAdd);
-
-    // this.setCloseHandler(this._callback.click);
 
   }
 
@@ -350,8 +277,6 @@ export default class FilmPopupTemplate extends Smart {
     }
 
   }
-
-
 
   setCloseHandler(callback) {
     this._callback.click = callback;
